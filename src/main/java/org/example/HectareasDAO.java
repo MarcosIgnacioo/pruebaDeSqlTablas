@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 public class HectareasDAO {
     static Conexion dbConnect = null;
+    String tablas[] = {"pichilingue", "pescadero"};
     public  static void insertarDatos(Hectareas hectarea)throws SQLException {
         if (dbConnect == null){
             dbConnect = new Conexion();
@@ -49,7 +50,7 @@ public class HectareasDAO {
         return hectareasTotales;
     }
 
-    public static void actualizadorDeHectareas(Hectareas hectarea) throws SQLException {
+    public static boolean actualizadorDeHectareas(Hectareas hectarea) throws SQLException {
 
         if (dbConnect == null){
             dbConnect = new Conexion();
@@ -57,6 +58,7 @@ public class HectareasDAO {
         try (Connection conexion = dbConnect.getConnection()){
             PreparedStatement ps = null;
             try{
+                if (HectareasDAO.verificacionHectareas(hectarea)-hectarea.getHectareas() >= 0){
                 String query = "UPDATE terreno_informacion_pichilingue SET hectareas_usadas = (hectareas_usadas + ?) WHERE terreno_informacion_pichilingue . id = 1;";
                 ps = conexion.prepareStatement(query);
                 ps.setString(1, String.valueOf(hectarea.getHectareas()));
@@ -65,11 +67,15 @@ public class HectareasDAO {
                 query = "UPDATE terreno_informacion_pichilingue SET hectareas_libres = (hectareas_totales - hectareas_usadas)";
                 ps = conexion.prepareStatement(query);
                 ps.executeUpdate();
-
-                System.out.println("Se hizo la actualizada");
+                return true;
+                }
+                else {
+                    return false;
+                }
             }catch (Exception e){
                 System.out.println(e);
             }
         }
+        return false;
     }
 }
