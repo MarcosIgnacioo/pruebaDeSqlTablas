@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class HectareasDAO {
     static Conexion dbConnect = null;
@@ -78,4 +79,46 @@ public class HectareasDAO {
         }
         return false;
     }
+
+    public  static String[] mostrarTabla()throws SQLException {
+        String columnasInfo [] = new String[4];
+        if (dbConnect == null) {
+            dbConnect = new Conexion();
+        }
+        float hectareasTotales = 0;
+        try (Connection conexion = dbConnect.getConnection()) {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            int i = 0;
+            ArrayList<String> hectareas = new ArrayList<String>();
+            ArrayList<String> plantas = new ArrayList<String>();
+            ArrayList<String> fechas = new ArrayList<String>();
+            ArrayList<String> productores = new ArrayList<String>();
+            try {
+                String query = "SELECT * from `pichilingue`";
+                ps = conexion.prepareStatement(query);
+                rs = ps.executeQuery(); // ejectua la consulta sin transacciones
+                while (rs.next()) {
+                    hectareas.add(String.valueOf(rs.getFloat("hectareas")));
+                    plantas.add(rs.getString("planta"));
+                    fechas.add(rs.getString("fecha"));
+                    productores.add(rs.getString("productor"));
+                    System.out.println("Hectareas: " + hectareas.get(i));;
+                    System.out.println("Plantas: " + plantas.get(i));;
+                    System.out.println("fechas: " + fechas.get(i));;
+                    System.out.println("Productores: " + productores.get(i));;
+                    i++;
+                }
+                columnasInfo[0] = String.valueOf(hectareas);
+                columnasInfo[1] = String.valueOf(plantas);
+                columnasInfo[2] = String.valueOf(fechas);
+                columnasInfo[3] = String.valueOf(productores);
+                return columnasInfo;
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+        return columnasInfo;
+    }
+
 }
