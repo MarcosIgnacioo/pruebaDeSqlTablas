@@ -10,7 +10,7 @@ public class HectareasService extends JFrame {
 
     public HectareasService(){
         this.setVisible(true);
-        this.setSize(300,300);
+        this.setSize(900,900);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.BLUE);
         this.setLayout(new GridLayout(3,3));
@@ -22,6 +22,14 @@ public class HectareasService extends JFrame {
 
         TextField tf3 = new TextField();
         this.add(tf3);
+
+        JTable tabla = new JTable(3,3);
+        tabla.setVisible(true);
+        ScrollPane sp = new ScrollPane();
+        sp.setVisible(true);
+        sp.setPreferredSize(new Dimension(100,100));
+        sp.add(tabla);
+        this.add(sp);
 
         JButton confirmar = new JButton("ok");
         confirmar.addActionListener(new ActionListener() {
@@ -53,16 +61,6 @@ public class HectareasService extends JFrame {
         h.setHectareas(Float.parseFloat(hectareas));
         h.setProductor(productor);
         h.setPlanta(planta);
-        if (HectareasDAO.verificacionHectareas(h)-Float.parseFloat(hectareas) >= 0){
-            System.out.println("Se puede");
-            HectareasDAO.actualizadorDeHectareas(h);
-            return true;
-        }
-        else {
-            System.out.println("No se puede UNUNUNU");
-            return false;
-        }
+        return HectareasDAO.actualizadorDeHectareas(h);
     }
-
-
 }
