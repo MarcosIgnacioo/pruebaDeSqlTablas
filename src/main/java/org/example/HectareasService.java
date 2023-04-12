@@ -59,7 +59,8 @@ public class HectareasService extends JFrame {
             return true;
         }
         else {
-            System.out.println("No se puede");
+            int popo = 23;
+            System.out.println("No se puede UNUNUNU");
             return false;
         }
     }
