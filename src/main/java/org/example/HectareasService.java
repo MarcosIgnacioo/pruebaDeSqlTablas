@@ -8,47 +8,7 @@ import java.sql.SQLException;
 
 public class HectareasService extends JFrame {
 
-    public HectareasService(){
-        this.setVisible(true);
-        this.setSize(900,900);
-        this.setLocationRelativeTo(null);
-        this.getContentPane().setBackground(Color.BLUE);
-        this.setLayout(new GridLayout(3,3));
-        TextField tf = new TextField();
-        this.add(tf);
 
-        TextField tf2 = new TextField();
-        this.add(tf2);
-
-        TextField tf3 = new TextField();
-        this.add(tf3);
-
-        JTable tabla = new JTable(3,3);
-        tabla.setVisible(true);
-        ScrollPane sp = new ScrollPane();
-        sp.setVisible(true);
-        sp.setPreferredSize(new Dimension(100,100));
-        sp.add(tabla);
-        this.add(sp);
-
-        JButton confirmar = new JButton("ok");
-        confirmar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (disponibilidadDeHectareas(tf.getText(),tf2.getText(),tf3.getText())) {
-
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null,"Has ingresado mas hectareas de las disponibles", "asd",  JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        this.add(confirmar);
-    }
     public static void meterDatosConfirmado(String hectareas,String productor,String planta) throws SQLException {
         Hectareas h = new Hectareas();
         h.setHectareas(Float.parseFloat(hectareas));
@@ -62,5 +22,10 @@ public class HectareasService extends JFrame {
         h.setProductor(productor);
         h.setPlanta(planta);
         return HectareasDAO.actualizadorDeHectareas(h);
+    }
+    public static String[] datosTabla() throws SQLException {
+        String datos [] = new String[4];
+        datos = HectareasDAO.mostrarTabla();
+        return datos;
     }
 }
