@@ -69,14 +69,12 @@ public class Ventana extends JFrame{
 
         JTable tabla = new JTable(0,0);
         tabla.setVisible(true);
-        Object columnas[];
-        columnas =HectareasService.datosTabla();
+        TablaInfo t = new TablaInfo();
+        TablaInfo.tablaActualizar();
 
         String[] nombresColumnas = {"Hectareas", "Planta", "Fecha", "Productor"};
 
         ArrayList<Object[][]> datos2 = new ArrayList<Object[][]>();
-        datos2.add(1, (Object[][]) columnas[0]);
-        System.out.println(columnas[0]);
         Object[][] datos = {
                 {1,"Zumaya",    "Abraham",   ""},
                 {2,"Arias",     "Cruz",      ""},
