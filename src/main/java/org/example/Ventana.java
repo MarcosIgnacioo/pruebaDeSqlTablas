@@ -9,6 +9,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Ventana extends JFrame{
+    static String[] columnas;
+
+    static String[] hectareasCol;
+    static String[] plantasCol;
+    static String[] fechasCol;
+    static String[] productoresCol;
+
+    static String[] nombresColumnas = {"Hectareas", "Planta", "Fecha", "Productor"};
+
+    static Object[][] datos;
+    static DefaultTableModel dtm;
     public Ventana() throws SQLException {
         this.setVisible(true);
         this.setSize(900,900);
@@ -67,31 +78,13 @@ public class Ventana extends JFrame{
         gbc.gridy = 5;
         camposPanel.add(tf3,gbc);
 
-        JTable tabla = new JTable(0,0);
-        tabla.setVisible(true);
-        TablaInfo t = new TablaInfo();
-        TablaInfo.tablaActualizar();
-
-        String[] nombresColumnas = {"Hectareas", "Planta", "Fecha", "Productor"};
-
-        ArrayList<Object[][]> datos2 = new ArrayList<Object[][]>();
-        Object[][] datos = {
-                {1,"Zumaya",    "Abraham",   ""},
-                {2,"Arias",     "Cruz",      ""},
-                {3,"Alejandro", "Francisco", ""},
-                {4,"Con h",     "Cris",      ""},
-                {5,"Mendoz",    "Piter",     ""}
-        };
-        DefaultTableModel dtm = new DefaultTableModel(datos,nombresColumnas);
-        tabla.setModel(dtm);
-        tabla.setLocation(250,550);
-        tabla.setSize(250,100);
-
-        ScrollPane sp = new ScrollPane();
+        final DefaultTableModel[] dtm = {TablaInfo.tablaActualizar()};
+        JTable tabla = new JTable(dtm[0]);
+        JScrollPane sp = new JScrollPane(tabla);
         sp.setVisible(true);
         sp.setPreferredSize(new Dimension(tablaPanel.getWidth(),tablaPanel.getHeight()));
-        sp.add(tabla);
-        tablaPanel.add(sp, BorderLayout.WEST);
+        tablaPanel.add(sp);
+        dtm[0].fireTableDataChanged();
 
         JButton confirmar = new JButton("ok");
         confirmar.addActionListener(new ActionListener() {
@@ -100,6 +93,10 @@ public class Ventana extends JFrame{
                 try {
                     if (HectareasService.disponibilidadDeHectareas(tf.getText(),tf2.getText(),tf3.getText())) {
                         HectareasService.meterDatosConfirmado(tf.getText(),tf2.getText(),tf3.getText());
+                        dtm[0] = TablaInfo.tablaActualizar();
+                        tabla.setModel(dtm[0]);
+                        repaint();
+                        revalidate();
                     }
                     else {
                         JOptionPane.showMessageDialog(null,"Has ingresado mas hectareas de las disponibles", "asd",  JOptionPane.ERROR_MESSAGE);
